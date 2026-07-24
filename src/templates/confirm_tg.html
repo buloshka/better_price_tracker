@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="form-container theme-tg">
+    <div class="icon-box">✈️</div>
+    <h2 class="form-title">Verify Telegram</h2>
+    <p class="form-subtitle">Please open our <a href="#" class="highlight-link">@NotificationBot</a> and enter the code below.</p>
+
+    <form action="#" method="POST" style="width: 100%;">
+        <div class="code-container">
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required autofocus>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+        </div>
+        <button type="submit" class="btn-submit">Confirm Telegram</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', path='js/code_verification.js') }}"></script>
+{% endblock %}

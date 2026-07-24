@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="form-container theme-email">
+    <div class="icon-box">✉️</div>
+    <h2 class="form-title">Verify your email</h2>
+    <p class="form-subtitle">We've sent a 5-digit verification code to <br><strong>you@example.com</strong></p>
+
+    <form action="#" method="POST" style="width: 100%;">
+        <div class="code-container">
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required autofocus>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+            <input type="text" class="code-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" required>
+        </div>
+        <button type="submit" class="btn-submit">Verify Email</button>
+    </form>
+
+    <p class="bottom-link">Didn't receive the code?
+        <a href="#" class="highlight-link">Resend</a>
+    </p>
+</div>
+
+<script src="{{ url_for('static', path='js/code_verification.js') }}"></script>
+{% endblock %}
+

@@ -6,8 +6,8 @@
 
 {% block body %}
 <div class="form-container">
-    <h2 class="form-title">Welcome Back</h2>
-    <p class="form-subtitle">Please enter your details to sign in</p>
+    <h2 class="form-title">Create an Account</h2>
+    <p class="form-subtitle">Get started with your free account</p>
 
     <form action="#" method="POST">
         <div class="form-group">
@@ -20,11 +20,17 @@
             <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
         </div>
 
-        <button type="submit" class="btn-submit">Sign In</button>
+        <div class="form-group">
+            <label for="telegram_id">Telegram ID <span class="label-optional">(optional)</span></label>
+            <input type="text" id="telegram_id" name="telegram_id" class="form-control" placeholder="123456789">
+            <span class="field-hint">Required if you want to receive instant notifications.</span>
+        </div>
+
+        <button type="submit" class="btn-submit">Sign Up</button>
     </form>
 
-    <a href="{{ url_for('get_signup') }}" class="switch-link">
-        Don't have an account yet? Create an account!
+    <a href="{{ url_for('get_signin') }}" class="switch-link">
+        Already have an account? Log in!
     </a>
 </div>
 {% endblock %}

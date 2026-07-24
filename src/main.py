@@ -1,24 +1,24 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, status
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
-from src.utils.templates import source
-from src.routers.login import router as login
+from src.routers.auth import login, register
 
 
 app = FastAPI(
     title='Price Tracker',
 )
 
+app.mount('/static', StaticFiles(directory='src/static'), name='static')
+
+
 @app.get(path='/', response_class=HTMLResponse)
-async def read_root(request: Request):
-    """Redirect to login page"""
-    return source.TemplateResponse(
-        request=request,
-        name='index.html',
-        context={
-            'title': 'Main Page',
-        }
-    )
+async def get_root(request: Request):
+    """Auto-redirect to login page"""
+    login_url = request.url_for('get_signin')
+
+    return RedirectResponse(url=login_url, status_code=status.HTTP_303_SEE_OTHER)
 
 
 app.include_router(login)
+app.include_router(register)
