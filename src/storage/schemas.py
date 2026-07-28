@@ -1,23 +1,27 @@
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, HttpUrl
-from typing import Optional
+from typing import Optional, Annotated
 from datetime import datetime
 from decimal import Decimal
 
 
 class UserBase(BaseModel):
-    email: EmailStr = Field(..., description="Электронная почта пользователя")
+    email: EmailStr
 
 
-class UserData(UserBase):
-    password: str = Field(..., min_length=6, description="Пароль, минимум 6 символов")
+class UserAuthData(UserBase):
+    password: Annotated[str, Field(min_length=6, max_length=64)]
 
 
 class UserResponse(UserBase):
     id: int
-    telegram_id: Optional[int] = None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserRegisterResponse(UserResponse):
+    telegram_id: Annotated[Optional[int], Field(gt=0)] = None
+    telegram_token: Optional[str] = None
 
 
 class TokenResponse(BaseModel):
@@ -26,8 +30,8 @@ class TokenResponse(BaseModel):
 
 
 class ProductCreate(BaseModel):
-    url: str = Field(HttpUrl, description="Ссылка на страницу товара")
-    target_price: Decimal = Field(..., gt=0, description="Желаемая цена (должна быть > 0)")
+    url: HttpUrl
+    target_price: Annotated[Decimal, Field(gt=0)]
 
 
 class ProductResponse(BaseModel):
