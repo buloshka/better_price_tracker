@@ -30,8 +30,9 @@ class Users(Base):
 
     id: Mapped[PrimaryKey[int]]
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     telegram_id: Mapped[Optional[str]] = mapped_column(BigInteger, nullable=True, unique=True, index=True)
+    telegram_token: Mapped[Optional[str]] = mapped_column(String(64), unique=True, nullable=True)
     created_at: Mapped[Timestamp]
 
 
