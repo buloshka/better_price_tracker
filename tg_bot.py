@@ -2,7 +2,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandObject, Command
 import asyncio
 
-from src.main import users_db
+from src.storage.models import users_db
 
 
 bot = Bot(token="8943332047:AAFO9YE6_mRBWBELT56W30RL91UJ8E6CrXs")
