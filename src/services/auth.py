@@ -59,7 +59,12 @@ async def register_new_user(
         data={"name": name, "email": email, "password": password, "telegram_id": telegram_id},
     )
 
-    user = await UserDAL(db_session=db_session).create_user(
+    user_dal = UserDAL(db_session=db_session)
+
+    if await user_dal.get_user_by(email=email):
+        ...
+
+    user = await user_dal.create_user(
         name=data.name,
         email=data.email,
         hashed_password=hash_password(data.password),
