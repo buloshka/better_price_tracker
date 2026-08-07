@@ -1,0 +1,108 @@
+.error-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.error-card {
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s ease;
+    border-top: none;
+}
+
+.error-card::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 10%;
+    width: 80%;
+    height: 10px;
+    border-radius: 20px;
+    background-color: #ef4444;
+}
+
+.error-card.warning-type::before {
+    background-color: #f59e0b;
+}
+
+.error-card.warning-type {
+    border-top-color: #f59e0b;
+}
+
+.error-card-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ef4444;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.error-card.warning-type .error-card-title {
+    color: #d97706;
+}
+
+/* Описание ошибки */
+.error-card-subtitle {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.error-card-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.error-card-btn:hover {
+    background-color: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.error-card-btn:active {
+    background-color: #1d4ed8;
+}
+
+/* --- СИНИЙ МОДИФИКАТОР: ИНФОРМАЦИЯ (например, "Обновление системы") --- */
+.error-card.info-type::before {
+    background-color: #3b82f6;
+}
+.error-card.info-type .error-card-title {
+    color: #1d4ed8;
+}
+
+/* --- ЗЕЛЕНЫЙ МОДИФИКАТОР: УСПЕХ (например, "Пароль изменен") --- */
+.error-card.success-type::before {
+    background-color: #10b981;
+}
+.error-card.success-type .error-card-title {
+    color: #047857;
+}
+
+/* --- ФИОЛЕТОВЫЙ МОДИФИКАТОР: КАСТОМНЫЙ (для чего-то особенного) --- */
+.error-card.custom-type::before {
+    background-color: #8b5cf6;
+}
+.error-card.custom-type .error-card-title {
+    color: #6d28d9;
+}
+

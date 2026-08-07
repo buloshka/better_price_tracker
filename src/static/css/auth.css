@@ -95,7 +95,6 @@
     position: relative;
 }
 
-/* Плавная линия при наведении */
 .switch-link::after {
     content: '';
     position: absolute;
@@ -144,3 +143,42 @@
 .auth-error-item:last-child {
     margin-bottom: 0;
 }
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-wrapper .form-control {
+    padding-right: 45px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.password-toggle-btn:hover {
+    color: #4b5563;
+}
+
+.password-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
