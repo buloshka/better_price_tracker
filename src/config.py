@@ -4,9 +4,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     DB_USER: str
     DB_PASSWORD: str
+    DB_NAME: str
     DB_HOST: str
     DB_PORT: int
-    DB_NAME: str
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
@@ -22,7 +22,11 @@ class Settings(BaseSettings):
     def REDIS_URL(self) -> str:
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
 settings = Settings()

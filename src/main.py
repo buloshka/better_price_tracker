@@ -1,4 +1,5 @@
 import re
+import logging
 
 from fastapi import FastAPI, Request, status, HTTPException
 
@@ -11,8 +12,17 @@ from src.routers.auth import login, register
 from src.routers.profile import profile
 from src.utils.templates import source
 
-app = FastAPI(title='Price Tracker')
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+logging.getLogger("alembic").setLevel(logging.INFO)
+
+
+app = FastAPI(title='Price Tracker')
 app.mount('/static', StaticFiles(directory='src/static'), name='static')
 
 
@@ -136,7 +146,19 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             html_content += f'<li class="auth-error-item"><b>{display_field_name}</b> {message}</li>'
         html_content += '</ul></div>'
         return HTMLResponse(content=html_content, status_code=status.HTTP_206_PARTIAL_CONTENT)
-    return await request_validation_exception_handler(request, exc)
+    return source.TemplateResponse(
+        request=request,
+        name='error_generic.html',
+        context={
+            'title': 'Unprocessable Error',
+            'error_class': '',
+            'header': '422 - Unprocessable Entity',
+            'description': 'Oops, something went wrong...',
+            'button_text': 'Back',
+            'action_url': 'javascript:history.back()'
+        },
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+    )
 
 
 @app.get(path='/', response_class=HTMLResponse)
