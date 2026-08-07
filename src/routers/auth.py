@@ -1,13 +1,13 @@
-from fastapi.exceptions import RequestValidationError
-from pydantic import EmailStr, ValidationError
-from fastapi import APIRouter, Request, status, Response, Form, Depends, HTTPException
-from fastapi.responses import HTMLResponse
-from typing import Optional, Union
+from typing import Optional
 
-from src.utils.templates import source
-from src.utils.auth import create_access_token
+from fastapi import APIRouter, Form, Request, status
+from fastapi.responses import HTMLResponse
+from pydantic import EmailStr
+
+from src.services.auth import authorize_user, register_new_user
 from src.storage.schemas import UserCreate, UserGet
-from src.storage.models import users_db
+from src.utils.auth import create_access_token
+from src.utils.templates import source
 
 
 login = APIRouter(prefix='/auth/signin', tags=['auth'])
@@ -25,26 +25,18 @@ async def get_signin(request: Request):
 @login.post("/", status_code=status.HTTP_200_OK)
 async def login_user(
         request: Request,
-        email: EmailStr = Form(...),
-        password: str = Form(...)
+        email: EmailStr = Form(..., title='Email'),
+        password: str = Form(..., title='Password'),
 ):
     """Authenticate user"""
-    try:
-        data = UserGet(
-            email=email,
-            __pydantic_context__={
-                "db": users_db,
-                "password": password,
-            }
-        )
-    except ValidationError as exc:
-        raise RequestValidationError(exc.errors())
+    user: UserGet = authorize_user(
+        email=email,
+        password=password,
+    )
 
-    user_id = data.id
+    access_token = create_access_token(data={"sub": str(user.id)})
 
-    access_token = create_access_token(data={"sub": str(user_id)})
-
-    profile_url = request.url_for('get_user', user_id=user_id)
+    profile_url = request.url_for('get_user', user_id=user.id)
     response = HTMLResponse(status_code=status.HTTP_200_OK)
     response.headers["HX-Redirect"] = str(profile_url)
 
@@ -71,31 +63,19 @@ async def get_signup(request: Request):
 @register.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(
         request: Request,
-        name: str = Form(...),
-        email: str = Form(...),
-        password: str = Form(...),
-        telegram_id: Optional[int] = Form(default=None),
+        name: str = Form(..., title='Name'),
+        email: EmailStr = Form(..., title='Email'),
+        password: str = Form(..., title='Password'),
+        telegram_id: Optional[int] = Form(None, title='Telegram ID'),
 ):
     """Create new user"""
-    try:
-        data = UserCreate(
-            name=name,
-            email=email,
-            password=password,
-            telegram_id=telegram_id,
-            __pydantic_context__={"db": users_db}
-        )
-    except ValidationError as exc:
-        raise RequestValidationError(exc.errors())
+    user: UserCreate = register_new_user(
+        name=name, email=email, password=password, telegram_id=telegram_id
+    )
 
-    user_id = max(users_db.keys()) + 1 if users_db else 1
+    access_token = create_access_token(data={"sub": str(user.id)})
 
-    users_db[user_id] = data.model_dump()
-    users_db[user_id]["created_at"] = "2026-08-04"
-
-    access_token = create_access_token(data={"sub": str(user_id)})
-
-    profile_url = request.url_for('get_user', user_id=user_id)
+    profile_url = request.url_for('get_user', user_id=user.id)
     response = HTMLResponse(status_code=status.HTTP_201_CREATED)
     response.headers["HX-Redirect"] = str(profile_url)
 
