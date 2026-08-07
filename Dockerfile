@@ -1,8 +1,8 @@
-# syntax=docker/dockerfile:1
-
-FROM dhi.io/python:3.14-dev AS builder
+FROM python:3.13-slim AS builder
 
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ libpq-dev && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m venv /venv
 ENV PATH="/venv/bin:$PATH"
@@ -10,11 +10,13 @@ ENV PATH="/venv/bin:$PATH"
 COPY requirements.txt .
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install --no-cache-dir -r requirements.txt
+    pip install -r requirements.txt
 
-FROM dhi.io/python:3.14
+FROM python:3.13-slim
 
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /venv /venv
 ENV PATH="/venv/bin:$PATH"
