@@ -10,15 +10,7 @@ import uuid
 
 
 users_db = {
-    1: {
-            "id": 1,
-            "name": "Bruh",
-            "email": "user@example.com",
-            "password": "secretpassword123",
-            "telegram_id": None,
-            "telegram_code": None,
-            "created_at": datetime.datetime.now()
-        }
+
 }
 
 
@@ -46,7 +38,7 @@ class Users(Base):
     id: Mapped[PrimaryKey[str]] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
-    hashed_password: Mapped[str] = mapped_column(unique=True, nullable=False)
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
     telegram_id: Mapped[Optional[str]] = mapped_column(BigInteger, nullable=True, unique=True, index=True)
     telegram_code: Mapped[Optional[int]] = mapped_column(nullable=True)
     created_at: Mapped[Timestamp]
