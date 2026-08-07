@@ -182,3 +182,4 @@ cython_debug/
 
 # JetBrains
 .idea/
+/pgdata
