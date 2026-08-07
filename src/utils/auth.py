@@ -1,8 +1,8 @@
 import uuid
-import bcrypt
-
 from datetime import datetime, timedelta, timezone
-from fastapi import Request, HTTPException, status
+
+import bcrypt
+from fastapi import HTTPException, Request, status
 from jose import jwt, JWTError
 
 from src.config import settings

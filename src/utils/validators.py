@@ -1,14 +1,7 @@
-import uuid
+from typing import Any, Dict, NoReturn, Optional, Type, Union
 
-from datetime import datetime, timedelta, timezone
-from fastapi import Request, HTTPException, status
-from jose import jwt, JWTError
-
-from src.config import settings
-
-from typing import Type, Any, Dict, Optional, NoReturn, Union
-from pydantic import BaseModel, ValidationError
 from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, ValidationError
 
 
 def validate_model(

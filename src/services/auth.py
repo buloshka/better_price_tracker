@@ -1,14 +1,7 @@
-import datetime
-import uuid
-
-from fastapi import Depends
-from pydantic_core import InitErrorDetails, PydanticCustomError
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.storage.schemas import UserCreate
-from src.storage.schemas import UserGet
-from src.storage.database import get_async_session
+from src.storage.schemas import UserCreate, UserGet
 from src.utils.auth import hash_password, verify_password
 from src.utils.data_access_layer import UserDAL
 from src.utils.validators import validate_model
@@ -17,7 +10,7 @@ from src.utils.validators import validate_model
 async def authorize_user(
         email: str,
         password: str,
-        db_session: AsyncSession
+        db_session: AsyncSession,
 ) -> UserGet:
     data: UserGet = validate_model(
         model_cls=UserGet,
@@ -50,7 +43,7 @@ async def register_new_user(
         email: str,
         password: str,
         telegram_id: int | None,
-        db_session: AsyncSession = Depends(get_async_session),
+        db_session: AsyncSession,
 ) -> UserGet:
     """
     Business logic for creating new users.

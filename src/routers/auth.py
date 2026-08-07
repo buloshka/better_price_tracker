@@ -1,10 +1,12 @@
 from typing import Optional
 
-from fastapi import APIRouter, Form, Request, status
+from fastapi import APIRouter, Depends, Form, Request, status
 from fastapi.responses import HTMLResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import EmailStr
 
 from src.services.auth import authorize_user, register_new_user
+from src.storage.database import get_async_session
 from src.storage.schemas import UserCreate, UserGet
 from src.utils.auth import create_access_token
 from src.utils.templates import source
@@ -27,11 +29,13 @@ async def login_user(
         request: Request,
         email: EmailStr = Form(..., title='Email'),
         password: str = Form(..., title='Password'),
+        db_session: AsyncSession = Depends(get_async_session),
 ):
     """Authenticate user"""
-    user: UserGet = authorize_user(
+    user: UserGet = await authorize_user(
         email=email,
         password=password,
+        db_session=db_session,
     )
 
     access_token = create_access_token(data={"sub": str(user.id)})
@@ -67,10 +71,15 @@ async def create_user(
         email: EmailStr = Form(..., title='Email'),
         password: str = Form(..., title='Password'),
         telegram_id: Optional[int] = Form(None, title='Telegram ID'),
+        db_session: AsyncSession = Depends(get_async_session),
 ):
     """Create new user"""
-    user: UserCreate = register_new_user(
-        name=name, email=email, password=password, telegram_id=telegram_id
+    user: UserCreate = await register_new_user(
+        name=name,
+        email=email,
+        password=password,
+        telegram_id=telegram_id,
+        db_session=db_session,
     )
 
     access_token = create_access_token(data={"sub": str(user.id)})

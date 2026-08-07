@@ -1,8 +1,8 @@
 import uuid
+from typing import Optional, overload
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Optional, overload
 
 from src.storage.models import Users
 
@@ -21,6 +21,7 @@ class UserDAL:
         )
         self.db_session.add(new_user)
         await self.db_session.flush()
+        await self.db_session.commit()
 
         return new_user
 

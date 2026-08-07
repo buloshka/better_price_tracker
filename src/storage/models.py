@@ -1,17 +1,20 @@
-from sqlalchemy import String, BigInteger, Text, ForeignKey, Numeric, func
-from sqlalchemy import CheckConstraint, UniqueConstraint
-from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
-from sqlalchemy.dialects.postgresql import UUID
-from typing import Annotated, TypeVar, Any, Optional
-
 import datetime
 import decimal
 import uuid
+from typing import Annotated, Any, Optional, TypeVar
 
-
-users_db = {
-
-}
+from sqlalchemy import (
+    BigInteger,
+    CheckConstraint,
+    ForeignKey,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
+)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 T = TypeVar('T', bound=Any)
@@ -35,7 +38,7 @@ class Base(DeclarativeBase):
 class Users(Base):
     __tablename__ = 'users'
 
-    id: Mapped[PrimaryKey[str]] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4)
+    id: Mapped[PrimaryKey[str]] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4, autoincrement=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(nullable=False)

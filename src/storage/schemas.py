@@ -1,8 +1,9 @@
-import re
 import datetime
+import re
 import uuid
-from typing import Optional, Any, Annotated
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator, ValidationInfo, StringConstraints
+from typing import Annotated, Optional
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 
 
@@ -39,6 +40,8 @@ class UserGet(BaseModel):
             default=None, title='Created at'
         ),
     ]
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserCreate(BaseModel):
