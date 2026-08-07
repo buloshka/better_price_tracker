@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/errors.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="error-page-wrapper">
+    <div class="error-card {{ error_class }}">
+        <h2 class="error-card-title">{{ header }}</h2>
+        <p class="error-card-subtitle">{{ description }}</p>
+
+        <button onclick="window.location.href='{{ action_url }}'" class="error-card-btn">
+            {{ button_text }}
+        </button>
+    </div>
+</div>
+{% endblock %}

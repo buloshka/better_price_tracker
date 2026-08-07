@@ -1,1 +1,12 @@
 {% extends 'base.html' %}
+
+{% block body %}
+<div>
+    Информация о пользователе:
+    <ul>
+        {% for key in user %}
+        <li>{{ key }}: {{ user[key] }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
