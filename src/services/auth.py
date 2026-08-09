@@ -14,7 +14,7 @@ async def authorize_user(
 ) -> UserGet:
     data: UserGet = validate_model(
         model_cls=UserGet,
-        data={"email": email}
+        data={'email': email}
     )
 
     user = await UserDAL(db_session=db_session).get_user_by(email=email)
@@ -22,10 +22,10 @@ async def authorize_user(
     if not user or not verify_password(password, user.hashed_password):
         raise RequestValidationError([
             {
-                "type": "no_field_error",
-                "loc": ["body", "email"],
-                "msg": "Wrong password or email",
-                "input": email
+                'type': 'no_field_error',
+                'loc': ['body', 'email'],
+                'msg': 'Wrong password or email',
+                'input': email
             }
         ])
 
@@ -56,13 +56,20 @@ async def register_new_user(
     """
     data: UserCreate = validate_model(
         model_cls=UserCreate,
-        data={"name": name, "email": email, "password": password, "telegram_id": telegram_id},
+        data={'name': name, 'email': email, 'password': password, 'telegram_id': telegram_id},
     )
 
     user_dal = UserDAL(db_session=db_session)
 
     if await user_dal.get_user_by(email=email):
-        ...
+        raise RequestValidationError([
+            {
+                'type': 'no_field_error',
+                'loc': ['body', 'email'],
+                'msg': 'User with this email already exists',
+                'input': email
+            }
+        ])
 
     user = await user_dal.create_user(
         name=data.name,
