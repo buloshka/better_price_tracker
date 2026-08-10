@@ -44,6 +44,8 @@ class Users(Base):
     hashed_password: Mapped[str] = mapped_column(nullable=False)
     telegram_id: Mapped[Optional[str]] = mapped_column(BigInteger, nullable=True, unique=True, index=True)
     telegram_code: Mapped[Optional[int]] = mapped_column(nullable=True)
+    is_gmail_verified: Mapped[bool] = mapped_column(default=False, nullable=False, server_default='false')
+    is_tg_verified: Mapped[bool] = mapped_column(default=False, nullable=False, server_default='false')
     created_at: Mapped[Timestamp]
 
 

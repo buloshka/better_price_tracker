@@ -4,11 +4,19 @@ from datetime import datetime, timedelta, timezone
 import bcrypt
 from fastapi import HTTPException, Request, status
 from jose import jwt, JWTError
-
 from src.config import settings
 
 
+def create_verification_token(data: dict) -> str:
+    """Creation JWT access token for user on 24 hours"""
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(hours=24)
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+
 def create_access_token(data: dict):
+    """Creation JWT access token"""
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
@@ -16,6 +24,7 @@ def create_access_token(data: dict):
 
 
 async def get_current_user_by_token(request: Request) -> uuid.UUID:
+    """Checking user by JWT access token and return UUID"""
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -30,6 +39,7 @@ async def get_current_user_by_token(request: Request) -> uuid.UUID:
 
 
 def hash_password(password: str) -> str:
+    """Hash password"""
     salt = bcrypt.gensalt()
     pwd_bytes = password.encode('utf-8')
     hashed = bcrypt.hashpw(pwd_bytes, salt)
@@ -37,6 +47,7 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify hash password with plain password"""
     if not plain_password or not hashed_password:
         return False
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))

@@ -28,6 +28,16 @@ async def get_user(
             detail="You are not authorized to view this page"
         )
 
+    if not user.is_gmail_verified:
+        return source.TemplateResponse(
+            request=request,
+            name='email_verify_status.html',
+            context={
+                'title': 'Verify Your Email',
+                'user': UserGet.model_construct(**user.__dict__),
+            },
+        )
+
     return source.TemplateResponse(
         request=request,
         name='profile.html',

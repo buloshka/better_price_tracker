@@ -33,6 +33,18 @@ class UserGet(BaseModel):
             default=None, title='Telegram ID'
         ),
     ]
+    is_gmail_verified: Annotated[
+        bool,
+        Field(
+            default=False, title='Account verify'
+        )
+    ]
+    is_tg_verified: Annotated[
+        bool,
+        Field(
+            default=False, title='Telegram verify'
+        )
+    ]
     ... # PRODUCTS
     created_at: Annotated[
         Optional[datetime.datetime],
@@ -79,6 +91,20 @@ class UserCreate(BaseModel):
             default=None, title='Telegram ID',
             description='must be at least 6 characters long or empty'
         ),
+    ]
+    is_gmail_verified: Annotated[
+        bool,
+        Field(
+            default=False,
+            description='is this user verified?',
+        )
+    ]
+    is_tg_verified: Annotated[
+        bool,
+        Field(
+            default=False,
+            description='is user\'s telegram verified?',
+        )
     ]
 
     @field_validator('name', mode='before')
