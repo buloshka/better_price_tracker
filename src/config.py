@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     MAIL_FROM_NAME: str
     TELEGRAM_BOT_TOKEN: str
 
+    SERVER_HOST: str = "http://127.0.0.1:8000"
+
     @property
     def DATABASE_URL_ASYNC(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

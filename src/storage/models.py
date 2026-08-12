@@ -6,6 +6,7 @@ from typing import Annotated, Any, Optional, TypeVar
 from sqlalchemy import (
     BigInteger,
     CheckConstraint,
+    DateTime,
     ForeignKey,
     Numeric,
     String,
@@ -25,6 +26,7 @@ PrimaryKey = Annotated[
 Timestamp = Annotated[
     datetime.datetime,
     mapped_column(
+    DateTime(timezone=True),
         nullable=False,
         server_default=func.current_timestamp(),
     )
@@ -46,6 +48,7 @@ class Users(Base):
     telegram_code: Mapped[Optional[int]] = mapped_column(nullable=True)
     is_gmail_verified: Mapped[bool] = mapped_column(default=False, nullable=False, server_default='false')
     is_tg_verified: Mapped[bool] = mapped_column(default=False, nullable=False, server_default='false')
+    last_email_sent_at: Mapped[Optional[Timestamp]]
     created_at: Mapped[Timestamp]
 
 

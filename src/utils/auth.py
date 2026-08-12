@@ -8,15 +8,15 @@ from src.config import settings
 
 
 def create_verification_token(data: dict) -> str:
-    """Creation JWT access token for user on 24 hours"""
+    """Creation JWT verification token for email activation valid for 24 hours"""
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(hours=24)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
 
 
-def create_access_token(data: dict):
-    """Creation JWT access token"""
+def create_access_token(data: dict) -> str:
+    """Creation JWT session access token"""
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
@@ -39,7 +39,7 @@ async def get_current_user_by_token(request: Request) -> uuid.UUID:
 
 
 def hash_password(password: str) -> str:
-    """Hash password"""
+    """Hash plain password using bcrypt"""
     salt = bcrypt.gensalt()
     pwd_bytes = password.encode('utf-8')
     hashed = bcrypt.hashpw(pwd_bytes, salt)

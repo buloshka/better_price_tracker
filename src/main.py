@@ -4,12 +4,11 @@ import logging
 from fastapi import FastAPI, Request, status, HTTPException
 
 from fastapi.exceptions import RequestValidationError
-from fastapi.exception_handlers import request_validation_exception_handler
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-from src.routers.auth import login, register
-from src.routers.profile import profile
+from src.routers.auth import login, register, email
+from src.routers.account import profile
 from src.utils.templates import source
 
 
@@ -35,7 +34,7 @@ async def session_expired_exception_handler(request: Request, exc: HTTPException
 
     return source.TemplateResponse(
         request=request,
-        name='error_generic.html',
+        name='errors/generic.html',
         context={
             'title': 'Session Expired',
             'error_class': 'warning-type',
@@ -55,7 +54,7 @@ async def forbidden_exception_handler(request: Request, exc: HTTPException):
 
     return source.TemplateResponse(
         request=request,
-        name='error_generic.html',
+        name='errors/generic.html',
         context={
             'title': 'Access Denied',
             'error_class': 'info-type',
@@ -72,7 +71,7 @@ async def forbidden_exception_handler(request: Request, exc: HTTPException):
 async def not_found_exception_handler(request: Request, exc: HTTPException):
     return source.TemplateResponse(
         request=request,
-        name='error_generic.html',
+        name='errors/generic.html',
         context={
             'title': 'Page Not Found',
             'error_class': '',
@@ -145,10 +144,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
             html_content += f'<li class="auth-error-item"><b>{display_field_name}</b> {message}</li>'
         html_content += '</ul></div>'
-        return HTMLResponse(content=html_content, status_code=status.HTTP_206_PARTIAL_CONTENT)
+        return HTMLResponse(
+            content=html_content,
+            status_code=status.HTTP_206_PARTIAL_CONTENT,
+            headers={"HX-Retarget": "#error-message"}
+        )
     return source.TemplateResponse(
         request=request,
-        name='error_generic.html',
+        name='errors/generic.html',
         context={
             'title': 'Unprocessable Error',
             'error_class': '',
@@ -170,4 +173,5 @@ async def get_root(request: Request):
 
 app.include_router(login)
 app.include_router(register)
+app.include_router(email)
 app.include_router(profile)
