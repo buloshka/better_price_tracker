@@ -5,7 +5,7 @@ from typing import Optional, overload, Any
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.storage.models import Base, Users, Products
+from src.storage.models import Base, Users, Products, UsersProducts
 
 
 class BaseDAL(abc.ABC):
@@ -217,6 +217,107 @@ class ProductDAL(BaseDAL):
             query = query.where(Products.id == id)
         elif url is not None:
             query = query.where(Products.url == url)
+        else:
+            return False
+
+        result = await self.db_session.execute(query)
+        await self.db_session.commit()
+
+        deleted_id = result.scalar_one_or_none()
+        return deleted_id is not None
+
+
+class UsersProductsDAL(BaseDAL):
+    """Data access layer for operating user product subscriptions (junction table)"""
+
+    async def create(self, **kwargs: Any) -> UsersProducts:
+        """
+        Creates a new user-product tracking subscription.
+        Expected kwargs: user_id, product_id, target_price, is_notification_enabled (optional)
+        """
+        new_subscription = UsersProducts(**kwargs)
+        self.db_session.add(new_subscription)
+        await self.db_session.flush()
+        await self.db_session.commit()
+        return new_subscription
+
+    # --- GET SECTION WITH OVERLOADS ---
+    @overload
+    async def get_by(self, *, id: int) -> Optional[UsersProducts]:
+        ...
+
+    @overload
+    async def get_by(self, *, user_id: uuid.UUID, product_id: int) -> Optional[UsersProducts]:
+        ...
+
+    async def get_by(
+        self,
+        *,
+        id: Optional[int] = None,
+        user_id: Optional[uuid.UUID] = None,
+        product_id: Optional[int] = None,
+    ) -> Optional[UsersProducts]:
+        """Gets a subscription filtered by its specific id or unique user_id + product_id pair."""
+        query = select(UsersProducts)
+
+        if id is not None:
+            query = query.where(UsersProducts.id == id)
+        elif user_id is not None and product_id is not None:
+            query = query.where(
+                UsersProducts.user_id == user_id,
+                UsersProducts.product_id == product_id
+            )
+        else:
+            return None
+
+        result = await self.db_session.execute(query)
+        return result.scalar_one_or_none()
+
+    # --- UPDATE SECTION ---
+    async def update(self, *, subscription_id: int, **kwargs: Any) -> Optional[UsersProducts]:
+        """
+        Dynamically updates specific user subscription fields (e.g., target_price, is_notification_enabled).
+        Example: await ups_dal.update(subscription_id=1, target_price=4999.00)
+        """
+        if not kwargs:
+            return await self.get_by(id=subscription_id)
+
+        query = (
+            update(UsersProducts)
+            .where(UsersProducts.id == subscription_id)
+            .values(**kwargs)
+        )
+        await self.db_session.execute(query)
+        await self.db_session.commit()
+
+        return await self.get_by(id=subscription_id)
+
+    # --- DELETE SECTION WITH OVERLOADS ---
+    @overload
+    async def delete_by(self, *, id: int) -> bool:
+        ...
+
+    @overload
+    async def delete_by(self, *, user_id: uuid.UUID, product_id: int) -> bool:
+        ...
+
+    async def delete_by(
+        self,
+        *,
+        id: Optional[int] = None,
+        user_id: Optional[uuid.UUID] = None,
+        product_id: Optional[int] = None,
+    ) -> bool:
+        """Deletes a tracking subscription using returning clause by id or user_id + product_id combination."""
+        query = delete(UsersProducts).returning(UsersProducts.id)
+
+        if id is not None:
+            query = query.where(UsersProducts.id == id)
+        elif user_id is not None and product_id is not None:
+            query = query.where(
+                UsersProducts.user_id == user_id,
+                UsersProducts.product_id == product_id
+            )
         else:
             return False
 
