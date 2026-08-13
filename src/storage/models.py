@@ -26,7 +26,7 @@ PrimaryKey = Annotated[
 Timestamp = Annotated[
     datetime.datetime,
     mapped_column(
-    DateTime(timezone=True),
+        DateTime(timezone=True),
         nullable=False,
         server_default=func.current_timestamp(),
     )
@@ -40,7 +40,7 @@ class Base(DeclarativeBase):
 class Users(Base):
     __tablename__ = 'users'
 
-    id: Mapped[PrimaryKey[str]] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4, autoincrement=False)
+    id: Mapped[PrimaryKey[uuid.UUID]] = mapped_column(UUID(as_uuid=True), default=uuid.uuid4, autoincrement=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
@@ -53,32 +53,60 @@ class Users(Base):
 
 
 class Products(Base):
+    """
+    Stores global product details extracted by scrapers.
+    URLs are normalized, unique, and indexed.
+    """
     __tablename__ = 'products'
 
     id: Mapped[PrimaryKey[int]]
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete="CASCADE"))
+    url: Mapped[str] = mapped_column(Text, nullable=False, unique=True, index=True)  # Unique, clean URL
     title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    url: Mapped[str] = mapped_column(Text, nullable=False)
-    target_price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Global tracking price state
     current_price: Mapped[Optional[decimal.Decimal]] = mapped_column(Numeric(10, 2), nullable=True)
     last_checked_at: Mapped[Optional[Timestamp]] = mapped_column(default=None, nullable=True)
     created_at: Mapped[Timestamp]
 
     __table_args__ = (
-        UniqueConstraint('user_id', 'url', name='unique_id_url'),
-        CheckConstraint("current_price >= 0", name="check_current_price_is_more_than_zero"),
-        CheckConstraint("target_price > 0", name="check_target_price_is_more_than_zero"),
+        CheckConstraint("current_price >= 0", name="check_current_price_is_positive"),
+    )
+
+
+class UsersProducts(Base):
+    """
+    The junction table (Many-to-Many) linking Users and Products.
+    Stores user-specific tracking parameters (target price, notification rules).
+    """
+    __tablename__ = 'users_products'
+
+    id: Mapped[PrimaryKey[int]]
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('users.id', ondelete="CASCADE"), nullable=False)
+    product_id: Mapped[int] = mapped_column(ForeignKey('products.id', ondelete="CASCADE"), nullable=False)
+    target_price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    is_notification_enabled: Mapped[bool] = mapped_column(default=True, nullable=False, server_default='true')
+    created_at: Mapped[Timestamp]
+
+    __table_args__ = (
+        UniqueConstraint('user_id', 'product_id', name='uq_user_product'),
+        CheckConstraint("target_price > 0", name="check_target_price_is_positive"),
     )
 
 
 class PriceHistory(Base):
+    """
+    Global price historical data logs tied to a unique Product,
+    independent of user tracking lists.
+    """
     __tablename__ = 'price_history'
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    product_id: Mapped[int] = mapped_column(ForeignKey('products.id', ondelete="CASCADE"))
+    id: Mapped[PrimaryKey[int]] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey('products.id', ondelete="CASCADE"), nullable=False)
     price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     recorded_at: Mapped[Timestamp] = mapped_column(index=True)
 
     __table_args__ = (
-        CheckConstraint("price >= 0", name="check_current_price_is_more_than_zero"),
+        CheckConstraint("price >= 0", name="check_historical_price_is_positive"),
     )
