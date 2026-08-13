@@ -19,7 +19,7 @@ async def authorize_user(
         }
     )
 
-    user = await UserDAL(db_session=db_session).get_user_by(email=email)
+    user = await UserDAL(db_session=db_session).get_by(email=email)
 
     if not user or not verify_password(password, user.hashed_password):
         raise RequestValidationError([
@@ -59,7 +59,7 @@ async def register_new_user(
 
     user_dal = UserDAL(db_session=db_session)
 
-    if await user_dal.get_user_by(email=email):
+    if await user_dal.get_by(email=email):
         raise RequestValidationError([
             {
                 'type': 'no_field_error',
@@ -69,7 +69,7 @@ async def register_new_user(
             }
         ])
 
-    user = await user_dal.create_user(
+    user = await user_dal.create(
         name=data.name,
         email=data.email,
         hashed_password=hash_password(data.password),

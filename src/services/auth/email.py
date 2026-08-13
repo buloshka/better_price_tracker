@@ -59,7 +59,7 @@ async def process_verification_email(
             return int(120 - elapsed)
 
     user_dal = UserDAL(db_session=db_session)
-    await user_dal.update_user(user_id=user.id, last_email_sent_at=now)
+    await user_dal.update(user_id=user.id, last_email_sent_at=now)
 
     verify_token = create_verification_token(data={'sub': str(user.id)})
     email_link = str(request.url_for('verify_email', token=verify_token))
