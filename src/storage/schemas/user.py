@@ -6,6 +6,7 @@ from typing import Annotated, Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 
+from src.storage.schemas import UserProductGet
 
 ALL_LETTERS = re.compile(r"^[а-яА-ЯёЁa-zA-Z\-\ ]+$")
 UNICODE_SPACES = re.compile(
@@ -14,6 +15,10 @@ UNICODE_SPACES = re.compile(
 
 
 class UserGet(BaseModel):
+    """
+    Data transfer object (DTO) representing an account configuration
+    and general meta-information returned from database select operations.
+    """
     id: Annotated[
         Optional[uuid.UUID],
         Field(
@@ -45,7 +50,11 @@ class UserGet(BaseModel):
             default=False, title='Telegram verify'
         )
     ]
-    ... # PRODUCTS
+    products: Annotated[
+        list[UserProductGet],
+        Field(default_factory=list, title='Tracked Products Link')
+    ]
+
     created_at: Annotated[
         Optional[datetime.datetime],
         Field(
@@ -57,6 +66,10 @@ class UserGet(BaseModel):
 
 
 class UserCreate(BaseModel):
+    """
+    Validation schema handling public payloads directed toward sign-up processing endpoints.
+    Enforces strict regex constraints on credentials, formatting, and formatting characters.
+    """
     id: Annotated[
         Optional[uuid.UUID],
         Field(
@@ -110,6 +123,7 @@ class UserCreate(BaseModel):
     @field_validator('name', mode='before')
     @classmethod
     def name_validator(cls, name: str) -> str:
+        """Enforces that name contains only alphabetic characters and trims whitespace."""
         if not ALL_LETTERS.match(name):
             raise PydanticCustomError(
                 'invalid_name',
@@ -120,6 +134,7 @@ class UserCreate(BaseModel):
     @field_validator('password', mode='after')
     @classmethod
     def validate_password(cls, password: str) -> str:
+        """Verifies that the chosen password contains zero blank spaces or unicode gap symbols."""
         if re.search(UNICODE_SPACES, password.strip()):
             raise PydanticCustomError(
                 'invalid_password',
@@ -130,6 +145,7 @@ class UserCreate(BaseModel):
     @field_validator('telegram_id', mode='after')
     @classmethod
     def telegram_id_validator(cls, telegram_id: Optional[int]) -> Optional[int]:
+        """Validates that a provided Telegram unique ID meets minimum numeric length standard."""
         if not telegram_id:
             return None
         if len(str(telegram_id)) < 6:

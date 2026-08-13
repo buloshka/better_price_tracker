@@ -102,7 +102,7 @@ class PriceHistory(Base):
     """
     __tablename__ = 'price_history'
 
-    id: Mapped[PrimaryKey[int]] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[PrimaryKey[int]] = mapped_column(BigInteger)
     product_id: Mapped[int] = mapped_column(ForeignKey('products.id', ondelete="CASCADE"), nullable=False)
     price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     recorded_at: Mapped[Timestamp] = mapped_column(index=True)
