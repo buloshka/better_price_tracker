@@ -241,7 +241,6 @@ class UsersProductsDAL(BaseDAL):
         await self.db_session.commit()
         return new_subscription
 
-    # --- GET SECTION WITH OVERLOADS ---
     @overload
     async def get_by(self, *, id: int) -> Optional[UsersProducts]:
         ...
@@ -273,7 +272,6 @@ class UsersProductsDAL(BaseDAL):
         result = await self.db_session.execute(query)
         return result.scalar_one_or_none()
 
-    # --- UPDATE SECTION ---
     async def update(self, *, subscription_id: int, **kwargs: Any) -> Optional[UsersProducts]:
         """
         Dynamically updates specific user subscription fields (e.g., target_price, is_notification_enabled).
@@ -292,7 +290,6 @@ class UsersProductsDAL(BaseDAL):
 
         return await self.get_by(id=subscription_id)
 
-    # --- DELETE SECTION WITH OVERLOADS ---
     @overload
     async def delete_by(self, *, id: int) -> bool:
         ...
