@@ -1,16 +1,16 @@
 import datetime
 import decimal
 import re
-from typing import Annotated, Optional, Any
+import uuid
+from typing import Annotated, Optional
 from urllib.parse import urlparse, urlunparse
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_core import PydanticCustomError
 
+
 SUPPORTED_URLS = re.compile(r"^https?://(www\.)?(avito\.ru|youla\.ru)/.*")
 
-
-# --- GLOBAL PRODUCTS SCHEMAS ---
 
 class ProductGet(BaseModel):
     """Schema for returning global product data."""
@@ -102,7 +102,7 @@ class UserProductCreate(BaseModel):
 
         if not SUPPORTED_URLS.match(clean_url):
             raise PydanticCustomError(
-                'unsupported_url',
+                'no_field_error',
                 'URL must be a valid link from avito.ru or youla.ru'
             )
 
@@ -114,22 +114,51 @@ class UserProductCreate(BaseModel):
 class UserProductGet(BaseModel):
     """Schema for returning user subscription info including the product data itself."""
     id: Annotated[int, Field(title="Subscription ID")]
-    user_id: Annotated[Any, Field(title="User ID reference")]
-    product_id: Annotated[int, Field(title="Product ID reference")]
-    target_price: Annotated[decimal.Decimal, Field(title="User Target Price")]
-    is_notification_enabled: Annotated[bool, Field(title="Notification Status")]
-    created_at: Annotated[datetime.datetime, Field(title="Created At")]
-
-    product: Annotated[ProductGet, Field(title="Associated Product Details")]
+    user_id: Annotated[
+        uuid.UUID,
+        Field(title="User ID reference")
+    ]
+    product_id: Annotated[
+        int,
+        Field(title="Product ID reference")
+    ]
+    product: Annotated[
+        ProductGet,
+        Field(title="Associated Product Details")
+    ]
+    target_price: Annotated[
+        decimal.Decimal,
+        Field(title="User Target Price")
+    ]
+    is_notification_enabled: Annotated[
+        bool,
+        Field(title="Notification Status")
+    ]
+    created_at: Annotated[
+        datetime.datetime,
+        Field(title="Created At")
+    ]
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class PriceHistoryGet(BaseModel):
     """Schema for returning a specific point in a product's price history chart."""
-    id: Annotated[int, Field(title="History Log ID")]
-    product_id: Annotated[int, Field(title="Product ID reference")]
-    price: Annotated[decimal.Decimal, Field(title="Historical Price")]
-    recorded_at: Annotated[datetime.datetime, Field(title="Recorded At")]
+    id: Annotated[
+        int,
+        Field(title="History Log ID")
+    ]
+    product_id: Annotated[
+        int,
+        Field(title="Product ID reference")
+    ]
+    price: Annotated[
+        decimal.Decimal,
+        Field(title="Historical Price")
+    ]
+    recorded_at: Annotated[
+        datetime.datetime,
+        Field(title="Recorded At")
+    ]
 
     model_config = ConfigDict(from_attributes=True)
