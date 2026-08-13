@@ -1,0 +1,53 @@
+<article class="tabular-product-row" id="product-row-{{ item.id }}">
+    <div class="row-thumbnail">
+        {% if item.product.image_url %}
+            <img src="{{ item.product.image_url }}" alt="Product Photo">
+        {% else %}
+            <div class="thumbnail-placeholder"></div>
+        {% endif %}
+    </div>
+
+    <div class="row-summary">
+        <h3 class="row-title">{{ item.product.title or 'Fetching information...' }}</h3>
+        <p class="row-description">{{ item.product.description or 'No description available' }}</p>
+    </div>
+
+    <div class="row-analytics">
+        <div class="price-indicator-group">
+            <span class="price-metric-label">Current:</span>
+            <span class="price-value-main">{{ item.product.current_price or '0.00' }} ₽</span>
+        </div>
+
+        <div class="price-shift-delta">
+            <span class="trend-badge trend-down">
+                <span class="trend-arrow">▼</span> 0 ₽ (0.0%)
+            </span>
+        </div>
+    </div>
+
+    <div class="row-link-and-time">
+        <a href="{{ item.product.url }}" target="_blank" rel="noopener noreferrer" class="external-redirect-link">
+            Go to product page
+        </a>
+        <span class="row-timestamp">Updated: {{ item.product.last_checked_at.strftime('%d.%m.%Y %H:%M') if item.product.last_checked_at else 'Just now' }}</span>
+    </div>
+
+    <div class="row-destruction-cell">
+        <button class="btn-trigger-destruction"
+                onclick="initiateRowDestruction('{{ item.id }}')"
+                title="Remove from tracking">
+            <svg class="close-icon" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <div class="destruction-countdown-overlay hidden" id="destruction-overlay-{{ item.id }}">
+            <button class="btn-cancel-destruction" onclick="cancelRowDestruction('{{ item.id }}')">
+                Cancel
+                <svg class="progress-ring" width="28" height="28">
+                    <circle class="progress-ring-circle" stroke="#ef4444" stroke-width="3" fill="transparent" r="11" cx="14" cy="14"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</article>

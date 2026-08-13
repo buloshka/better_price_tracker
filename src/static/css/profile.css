@@ -1,0 +1,440 @@
+.profile-layout {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-self: flex-start;
+}
+
+.profile-navigation {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-badge-wrapper {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    padding: 10px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(229, 231, 235, 0.5);
+    height: 46px;
+}
+
+.profile-trigger {
+    justify-self: start;
+    cursor: default;
+}
+
+.settings-trigger {
+    justify-self: end;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #4b5563;
+}
+
+.settings-trigger:hover {
+    color: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-username {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.nav-branding {
+    text-align: center;
+}
+
+.branding-logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.5px;
+}
+
+/* WORKSPACE CONTAINER CARD */
+.workspace-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.link-submission-block {
+    width: 100%;
+}
+
+.inline-submission-form {
+    width: 100%;
+}
+
+.form-input-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.form-control-field {
+    background-color: #ffffff;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 15px;
+    outline: none;
+    flex-grow: 1;
+    transition: all 0.2s ease;
+}
+
+.form-control-field:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.target-price-field {
+    max-width: 140px;
+    flex-grow: 0;
+}
+
+.btn-action-submit {
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-sizing: border-box;
+}
+
+.btn-action-submit:hover {
+    background-color: #1d4ed8;
+}
+
+.loader-element {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.tabular-products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tabular-product-row {
+    display: grid;
+    grid-template-columns: 70px 2.5fr 1.2fr 1.5fr 40px;
+    align-items: center;
+    gap: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+.tabular-product-row:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.row-thumbnail {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    background-color: #f3f4f6;
+    overflow: hidden;
+}
+
+.row-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #e5e7eb;
+}
+
+.row-summary {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.row-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row-description {
+    font-size: 13px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+}
+
+.row-analytics {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.price-indicator-group {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.price-metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+}
+
+.price-value-main {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.trend-badge {
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.trend-down { color: #10b981; }
+.trend-up { color: #ef4444; }
+
+.row-link-and-time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.external-redirect-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    transition: color 0.15s ease;
+}
+
+.external-redirect-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.row-timestamp {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.row-destruction-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.btn-trigger-destruction {
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-trigger-destruction:hover {
+    color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.close-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.destruction-countdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ffffff;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.destruction-countdown-overlay.hidden {
+    display: none !important;
+}
+
+.btn-cancel-destruction {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ef4444;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #fee2e2;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel-destruction:hover {
+    background-color: #fef2f2;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    stroke-dasharray: 70;
+    stroke-dashoffset: 70;
+}
+
+@keyframes destructionCountdownAnim {
+    from { stroke-dashoffset: 70; }
+    to { stroke-dashoffset: 0; }
+}
+
+.dashboard-empty-state {
+    text-align: center;
+    padding: 32px;
+}
+
+.empty-state-text {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.info-guide-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    padding: 24px 32px;
+    border: 1px solid #e5e7eb;
+}
+
+.guide-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 14px;
+}
+
+.guide-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 0;
+}
+
+.guide-step-item {
+    font-size: 14px;
+    color: #4b5563;
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.6;
+}
+
+.guide-step-item::before {
+    content: "•";
+    position: absolute;
+    left: 4px;
+    color: #2563eb;
+    font-weight: 900;
+    font-size: 16px;
+    top: -1px;
+}
+
+.legal-compliance-block {
+    text-align: center;
+    padding: 0 16px;
+    margin-bottom: 20px;
+}
+
+.compliance-text {
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#error-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 350px;
+    width: 100%;
+}
+
+.auth-error-container {
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);
+    animation: toastSlideIn 0.3s ease-out forwards;
+    padding-right: 35px;
+}
+
+.auth-error-container.fade-out {
+    animation: toastFadeOut 0.3s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastFadeOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+}
+

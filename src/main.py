@@ -59,7 +59,7 @@ async def forbidden_exception_handler(request: Request, exc: HTTPException):
             'title': 'Access Denied',
             'error_class': 'info-type',
             'header': 'Access Denied',
-            'description': 'This profile does not belong to you. Please log in with the correct credentials.',
+            'description': 'This account does not belong to you. Please log in with the correct credentials.',
             'button_text': 'Go to Login',
             'action_url': '/auth/signin/'
         },
@@ -76,7 +76,7 @@ async def not_found_exception_handler(request: Request, exc: HTTPException):
             'title': 'Page Not Found',
             'error_class': '',
             'header': '404 - Not Found',
-            'description': 'The profile or tracker you are looking for does not exist or has been deleted.',
+            'description': 'The account or tracker you are looking for does not exist or has been deleted.',
             'button_text': 'Back to Home',
             'action_url': '/'
         },
