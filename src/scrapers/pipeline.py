@@ -1,5 +1,6 @@
 from typing import Any
 
+from src.scrapers.config import ScrapedProductData
 from src.scrapers.parser.base import BaseParser
 from src.scrapers.scraper.base import BaseScraper
 
@@ -46,7 +47,7 @@ class ScrapingPipeline:
         if self.parser.engine is not None:
             await self.parser.engine.close()
 
-    async def run(self) -> dict[str, Any]:
+    async def run(self) -> ScrapedProductData:
         document = await self.parser.parse()
 
         self._scraper = self.scraper_cls(

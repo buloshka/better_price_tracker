@@ -1,6 +1,10 @@
+import decimal
 import logging
+
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Optional
+
+from src.scrapers.config import ScrapedProductData
 from src.scrapers.document.base import Document
 from src.scrapers.exceptions import ExtractionError
 
@@ -20,8 +24,12 @@ class BaseScraper(ABC):
         self.selectors = selectors or {}
         self.catch_errors = catch_errors
 
-    async def extract(self) -> dict[str, Any]:
-        result: dict[str, Any] = {}
+    async def extract(self) -> ScrapedProductData:
+        """
+        Extracts all standard fields from the document
+        and returns a strongly typed ScrapedProductData object.
+        """
+        temp_result = {}
         fields = ("title", "price", "description", "photo", "url")
 
         logger.info(f"Starting field extraction for URL: {self.document.url}")
@@ -38,7 +46,7 @@ class BaseScraper(ABC):
                 else:
                     logger.info(f"Field '{field_name}' successfully extracted")
 
-                result[field_name] = value
+                temp_result[field_name] = value
 
             except Exception as exc:
                 if not self.catch_errors:
@@ -46,9 +54,22 @@ class BaseScraper(ABC):
                     raise ExtractionError(f"Failed to extract field '{field_name}'.") from exc
 
                 logger.warning(f"Error extracting field '{field_name}', returning None. Error: {exc}")
-                result[field_name] = None
+                temp_result[field_name] = None
 
-        return result
+        if temp_result["price"] is not None:
+            try:
+                temp_result["price"] = decimal.Decimal(str(temp_result["price"]))
+            except (ValueError, decimal.InvalidOperation):
+                logger.warning(f"Failed to convert price '{temp_result['price']}' to Decimal, setting to None")
+                temp_result["price"] = None
+
+        return ScrapedProductData(
+            title=temp_result["title"],
+            price=temp_result["price"],
+            description=temp_result["description"],
+            photo=temp_result["photo"],
+            url=temp_result["url"]
+        )
 
     def get_selectors(self, field_name: str) -> list[str]:
         return self.selectors.get(field_name, [])

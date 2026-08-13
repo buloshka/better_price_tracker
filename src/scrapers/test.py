@@ -20,7 +20,7 @@ async def test_scraper(url: str):
             result = await pipeline.run()
 
             logger.info("Scraping completed. Results:")
-            for field, value in result.items():
+            for field, value in result.to_dict().items():
                 logger.info(f"  - {field}: {value}")
 
     except Exception as e:
