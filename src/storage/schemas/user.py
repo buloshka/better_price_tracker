@@ -21,34 +21,24 @@ class UserGet(BaseModel):
     """
     id: Annotated[
         Optional[uuid.UUID],
-        Field(
-            default=None, title='ID',
-        ),
+        Field(default=None, title='ID',),
     ]
     name: Annotated[
         Optional[str],
-        Field(
-            default=None, title='Name'
-        ),
+        Field(default=None, title='Name'),
     ]
     email: EmailStr
     telegram_id: Annotated[
         Optional[int],
-        Field(
-            default=None, title='Telegram ID'
-        ),
+        Field(default=None, title='Telegram ID'),
     ]
     is_gmail_verified: Annotated[
         bool,
-        Field(
-            default=False, title='Account verify'
-        )
+        Field(default=False, title='Account verify')
     ]
     is_tg_verified: Annotated[
         bool,
-        Field(
-            default=False, title='Telegram verify'
-        )
+        Field(default=False, title='Telegram verify')
     ]
     products: Annotated[
         list[UserProductGet],
@@ -57,9 +47,7 @@ class UserGet(BaseModel):
 
     created_at: Annotated[
         Optional[datetime.datetime],
-        Field(
-            default=None, title='Created at'
-        ),
+        Field(default=None, title='Created at'),
     ]
 
     model_config = ConfigDict(from_attributes=True)
@@ -72,10 +60,7 @@ class UserCreate(BaseModel):
     """
     id: Annotated[
         Optional[uuid.UUID],
-        Field(
-            default=None, title='ID',
-            description='must be uuid.UUID type'
-        ),
+        Field(default=None, title='ID', description='must be uuid.UUID type'),
     ]
     name: Annotated[
         str,
@@ -102,22 +87,16 @@ class UserCreate(BaseModel):
         Optional[int],
         Field(
             default=None, title='Telegram ID',
-            description='must be at least 6 characters long or empty'
+            description='must be at least 6 characters long or empty',
         ),
     ]
     is_gmail_verified: Annotated[
         bool,
-        Field(
-            default=False,
-            description='is this user verified?',
-        )
+        Field(default=False, description='is this user verified?',)
     ]
     is_tg_verified: Annotated[
         bool,
-        Field(
-            default=False,
-            description='is user\'s telegram verified?',
-        )
+        Field(default=False, description='is user\'s telegram verified?',)
     ]
 
     @field_validator('name', mode='before')
