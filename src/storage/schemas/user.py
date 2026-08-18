@@ -6,7 +6,8 @@ from typing import Annotated, Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 
-from src.storage.schemas import UserProductGet
+from src.storage.schemas.product import UserProductGet
+
 
 ALL_LETTERS = re.compile(r"^[а-яА-ЯёЁa-zA-Z\-\ ]+$")
 UNICODE_SPACES = re.compile(

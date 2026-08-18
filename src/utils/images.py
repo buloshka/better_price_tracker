@@ -33,7 +33,7 @@ async def download_product_image(external_url: str) -> str | None:
                 with open(full_path, "wb") as f:
                     f.write(response.content)
 
-                return f"static/images/products/{filename}"
+                return f"images/products/{filename}"
 
             logger.warning(f"Failed to download image, status code: {response.status_code}")
             return None

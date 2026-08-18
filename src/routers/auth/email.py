@@ -37,7 +37,7 @@ async def verify_email(
         )
 
     user_dal = UserDAL(db_session=db_session)
-    user = await user_dal.get_user_by(id=user_uuid)
+    user = await user_dal.get_by(id=user_uuid)
 
     if not user:
         raise HTTPException(
@@ -46,7 +46,7 @@ async def verify_email(
         )
 
     if not user.is_gmail_verified:
-        await user_dal.update_user(user_id=user.id, is_gmail_verified=True)
+        await user_dal.update(user_id=user.id, is_gmail_verified=True)
 
     profile_url = request.url_for('get_user', user_id=user.id)
     return RedirectResponse(
@@ -55,7 +55,7 @@ async def verify_email(
     )
 
 
-@email.post("/auth/signin/resend-verification", response_class=HTMLResponse)
+@email.post("/resend-verification", response_class=HTMLResponse)
 async def resend_verification(
     request: Request,
     background_tasks: BackgroundTasks,
@@ -64,7 +64,7 @@ async def resend_verification(
 ):
     """Resend verification email with a hard server-side 2-minute check"""
     user_dal = UserDAL(db_session=db_session)
-    user = await user_dal.get_user_by(id=current_user_id)
+    user = await user_dal.get_by(id=current_user_id)
 
     if not user:
         raise HTTPException(
@@ -104,7 +104,7 @@ async def resend_verification(
     return response
 
 
-@email.get("/auth/signin/resend-button-active", response_class=HTMLResponse)
+@email.get("/resend-button-active", response_class=HTMLResponse)
 async def get_active_resend_button(request: Request):
     """Return active resend button из HTML-шаблона"""
     return source.TemplateResponse(

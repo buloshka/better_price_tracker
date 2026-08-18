@@ -1,4 +1,5 @@
 import asyncio
+import sys
 import logging
 import random
 from typing import Optional
@@ -43,6 +44,12 @@ class PlaywrightEngine(ConnectingEngine):
     async def start(self) -> None:
         if self._browser is not None:
             return
+
+        if sys.platform == 'win32':
+            try:
+                asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+            except Exception as e:
+                logger.debug(f"Loop policy already set or could not be modified: {e}")
 
         logger.info("Launching Chromium instance with enhanced Stealth configurations...")
         try:

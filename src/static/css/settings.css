@@ -1,0 +1,313 @@
+.settings-page-wrapper {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+.btn-back-navigation {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4b5563;
+    align-self: flex-start;
+    transition: color 0.2s ease;
+}
+
+.btn-back-navigation:hover {
+    color: #111827;
+}
+
+.navigation-arrow-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.settings-workspace-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-display-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.profile-meta-joined {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.btn-trigger-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+    background-color: #fef2f2;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-trigger-logout:hover {
+    background-color: #fee2e2;
+}
+
+.logout-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.settings-divider {
+    border: none;
+    height: 1px;
+    background-color: #e5e7eb;
+    margin: 24px 0;
+}
+
+.settings-form-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.settings-form-block:last-child {
+    margin-bottom: 0;
+}
+
+.section-block-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.settings-inline-action-form {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.input-field-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.settings-control-field {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.settings-control-field:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    background-color: #ffffff !important;
+    padding-left: 14px !important;
+}
+
+.settings-control-field:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-action-save {
+    padding: 0 18px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #2563eb;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+}
+
+.btn-action-save:hover {
+    background-color: #1d4ed8;
+}
+
+.field-status-badge {
+    position: absolute;
+    left: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.badge-green-check {
+    color: #10b981;
+    width: 18px;
+    height: 18px;
+}
+
+.badge-red-cross {
+    color: #ef4444;
+    width: 18px;
+    height: 18px;
+}
+
+.input-field-wrapper.state-verified .badge-green-check {
+    display: flex;
+}
+.input-field-wrapper.state-verified .settings-control-field {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+    padding-left: 40px;
+}
+.input-field-wrapper.state-verified .settings-control-field:focus {
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+.input-field-wrapper.state-unverified .badge-red-cross {
+    display: flex;
+}
+.input-field-wrapper.state-unverified .settings-control-field {
+    border-color: #f87171;
+    background-color: #fef2f2;
+    padding-left: 40px;
+}
+
+.input-field-wrapper.state-pending .settings-control-field {
+    border-color: #eab308;
+    background-color: #fefce8;
+}
+
+.input-field-wrapper.state-error .settings-control-field {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+}
+
+.input-field-wrapper .htmx-indicator {
+    display: none;
+}
+.input-field-wrapper.htmx-request .htmx-indicator {
+    display: flex !important;
+    left: 14px;
+    z-index: 10;
+}
+.input-field-wrapper.htmx-request .settings-control-field {
+    padding-left: 40px !important;
+    border-color: #eab308 !important;
+    background-color: #fefce8 !important;
+}
+
+.input-field-wrapper.htmx-request .badge-green-check,
+.input-field-wrapper.htmx-request .badge-red-cross {
+    display: none !important;
+}
+
+.async-status-output-message {
+    margin-top: 6px;
+    font-size: 13px;
+}
+
+.text-verification-warning {
+    color: #ca8a04;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+#error-message {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    z-index: 10000;
+    max-width: 380px;
+    width: calc(100% - 48px);
+}
+
+.auth-error-container {
+    background-color: #ffffff;
+    border-left: 4px solid #ef4444;
+    border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    padding: 16px 40px 16px 16px;
+    position: relative;
+    cursor: pointer;
+    animation: toastSlideInLeft 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.auth-error-container::after {
+    content: "✕";
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 14px;
+    color: #9ca3af;
+    font-weight: bold;
+}
+
+.auth-error-container:hover::after {
+    color: #4b5563;
+}
+
+.auth-error-container.fade-out {
+    animation: toastFadeOutLeft 0.3s ease-in forwards;
+}
+
+.auth-error-list {
+    margin: 0;
+    padding-left: 16px;
+    list-style-type: disc;
+}
+
+.auth-error-item {
+    color: #b91c1c;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+@keyframes toastSlideInLeft {
+    from { transform: translateX(-120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastFadeOutLeft {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-120%); opacity: 0; }
+}
+
+.form-input-row.htmx-request .settings-control-field,
+form.htmx-request .settings-control-field {
+    pointer-events: none;
+    opacity: 0.6;
+    background-color: #f3f4f6 !important;
+}

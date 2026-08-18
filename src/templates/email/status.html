@@ -37,7 +37,7 @@
             </button>
         {% else %}
             <button type="button" id="resend-btn" class="switch-link" style="background: none; border: none; cursor: pointer;"
-                    hx-post="/auth/signin/resend-verification" hx-target="#resend-button-container" hx-swap="outerHTML">
+                    hx-post="/auth/email/resend-verification" hx-target="#resend-button-container" hx-swap="outerHTML">
                 Resend verification email
             </button>
         {% endif %}

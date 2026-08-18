@@ -19,7 +19,7 @@
             <h1 class="branding-logo">Better Price Tracker</h1>
         </div>
 
-        <a href="/profiles/settings" class="nav-badge-wrapper settings-trigger" title="Settings">
+        <a href="{{ url_for('get_settings') }}" class="nav-badge-wrapper settings-trigger" title="Settings">
             <svg class="nav-icon" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.43l-1.003.767c-.304.233-.434.629-.374 1.012.012.079.018.16.018.242 0 .082-.006.163-.018.242-.06.383.07.78.374 1.012l1.003.767a1.125 1.125 0 0 1 .26 1.43l-1.296 2.247a1.125 1.125 0 0 1-1.37.49l-1.216-.456c-.356-.133-.751-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.43l1.004-.767c.304-.233.434-.63.374-1.012a5.25 5.25 0 0 1-.018-.242c0-.082.006-.163.018-.242.06-.383-.07-.78-.374-1.012l-1.004-.767a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.49l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -33,7 +33,7 @@
             <div id="error-message"></div>
 
             <form id="track-form"
-                  hx-post="/profiles/track"
+                  hx-post="/tracks/create"
                   hx-target="#products-list-container"
                   hx-swap="beforeend"
                   hx-indicator="#loading-spinner"
@@ -55,62 +55,21 @@
                     </div>
                 {% else %}
                     {% for item in user.products %}
-                        <article class="tabular-product-row" id="product-row-{{ item.id }}">
-                            <div class="row-thumbnail">
-                                {% if item.product.image_url %}
-                                    <img src="{{ item.product.image_url }}" alt="Product Photo">
-                                {% else %}
-                                    <div class="thumbnail-placeholder"></div>
-                                {% endif %}
-                            </div>
-
-                            <div class="row-summary">
-                                <h3 class="row-title">{{ item.product.title or 'Fetching information...' }}</h3>
-                                <p class="row-description">{{ item.product.description or 'No description available' }}</p>
-                            </div>
-
-                            <div class="row-analytics">
-                                <div class="price-indicator-group">
-                                    <span class="price-metric-label">Current:</span>
-                                    <span class="price-value-main">{{ item.product.current_price or '0.00' }} ₽</span>
-                                </div>
-
-                                <div class="price-shift-delta">
-                                    <span class="trend-badge trend-down">
-                                        <span class="trend-arrow">▼</span> -500 ₽ (-8.3%)
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="row-link-and-time">
-                                <a href="{{ item.product.url }}" target="_blank" rel="noopener noreferrer" class="external-redirect-link">
-                                    Go to product page
-                                </a>
-                                <span class="row-timestamp">Updated: {{ item.product.last_checked_at.strftime('%d.%m.%Y %H:%M') if item.product.last_checked_at else 'Pending...' }}</span>
-                            </div>
-
-                            <div class="row-destruction-cell">
-                                <button class="btn-trigger-destruction"
-                                        onclick="initiateRowDestruction('{{ item.id }}')"
-                                        title="Remove from tracking">
-                                    <svg class="close-icon" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-
-                                <div class="destruction-countdown-overlay hidden" id="destruction-overlay-{{ item.id }}">
-                                    <button class="btn-cancel-destruction" onclick="cancelRowDestruction('{{ item.id }}')">
-                                        Cancel
-                                        <svg class="progress-ring" width="28" height="28">
-                                            <circle class="progress-ring-circle" stroke="#ef4444" stroke-width="3" fill="transparent" r="11" cx="14" cy="14"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
+                        {% include "account/components/product_row.html" %}
                     {% endfor %}
                 {% endif %}
             </div>
+            {% if user.products|length == 20 %}
+                <div id="pagination-wrapper" style="text-align: center; margin-top: 20px;">
+                    <button class="btn-action-submit"
+                            hx-get="/tracks/load-more?offset=20"
+                            hx-target="#products-list-container"
+                            hx-swap="beforeend"
+                            hx-target-error="#error-message">
+                        Показать еще
+                    </button>
+                </div>
+            {% endif %}
         </section>
     </main>
 
@@ -162,7 +121,7 @@
     }
 
     function executeHTMXRowDeletion(subscriptionId) {
-        htmx.ajax('DELETE', '/profiles/untrack/' + subscriptionId, {
+        htmx.ajax('DELETE', '/tracks/delete/' + subscriptionId, {
             target: '#product-row-' + subscriptionId,
             swap: 'delete'
         });
@@ -178,7 +137,7 @@
         if (evt.detail.target.id === 'error-message') {
             const errorContainer = evt.detail.target.querySelector('.auth-error-container');
             if (!errorContainer) return;
-            
+
             const removeToast = function() {
                 if (!errorContainer.classList.contains('fade-out')) {
                     errorContainer.classList.add('fade-out');

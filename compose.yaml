@@ -1,6 +1,8 @@
+version: '3.8'
+
 services:
   web:
-    image: winderkrons/price-tracker-web:v1.1.5
+    image: winderkrons/price-tracker-web:v2.0.5
     container_name: fastapi_web_container
     ports:
       - "8000:8000"
@@ -8,6 +10,21 @@ services:
       - .:/code
     env_file:
       - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  bot:
+    image: winderkrons/price-tracker-web:v2.0.0
+    container_name: telegram_bot_container
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    command: python -m src.tg_bot
     depends_on:
       postgres:
         condition: service_healthy

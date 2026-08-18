@@ -1,6 +1,4 @@
-from typing import Any
-
-from src.scrapers.config import ScrapedProductData
+from src.scrapers.models import ScrapedProductData
 from src.scrapers.parser.base import BaseParser
 from src.scrapers.scraper.base import BaseScraper
 

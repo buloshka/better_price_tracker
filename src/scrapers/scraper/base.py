@@ -4,7 +4,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from src.scrapers.config import ScrapedProductData
+from src.scrapers.models import ScrapedProductData
 from src.scrapers.document.base import Document
 from src.scrapers.exceptions import ExtractionError
 

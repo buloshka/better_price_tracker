@@ -130,6 +130,10 @@ class UserProductGet(BaseModel):
         decimal.Decimal,
         Field(title="User Target Price")
     ]
+    old_price: Annotated[
+        Optional[decimal.Decimal],
+        Field(default=None)
+    ]
     is_notification_enabled: Annotated[
         bool,
         Field(title="Notification Status")

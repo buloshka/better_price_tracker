@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', path='css/settings.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="settings-page-wrapper">
+    <a href="/profiles/{{ user.id }}" class="btn-back-navigation">
+        <svg class="navigation-arrow-icon" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+        Back
+    </a>
+
+    <main class="settings-workspace-card">
+
+        <header class="settings-profile-header">
+            <div class="profile-meta-summary">
+                <h1 class="profile-display-name">{{ user.name or 'User' }}</h1>
+                <p class="profile-meta-joined">Member since: {{ user.created_at.strftime('%d.%m.%Y %H:%M') if user.created_at else 'Pending...' }}</p>
+            </div>
+
+            <a href="/auth/logout" class="btn-trigger-logout">
+                <svg class="logout-icon" xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0 2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+                </svg>
+                Log Out
+            </a>
+        </header>
+
+        <hr class="settings-divider">
+
+        <section class="settings-form-block">
+            <h2 class="section-block-title">Email Address</h2>
+
+            <!-- Убрали hx-on::before-request -->
+            <form id="email-form"
+                  hx-post="/profiles/settings/change-email"
+                  hx-target="#email-status-indicator"
+                  hx-indicator="#email-loader"
+                  class="settings-inline-action-form">
+
+                <div id="email-wrapper"
+                     class="input-field-wrapper {% if user.is_gmail_verified %}state-verified{% elif user.email and not user.is_gmail_verified %}state-pending{% else %}state-unverified{% endif %}"
+                     data-original-state="{% if user.is_gmail_verified %}state-verified{% elif user.email and not user.is_gmail_verified %}state-pending{% else %}state-unverified{% endif %}">
+
+                    <span class="field-status-badge badge-green-check">
+                        <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                        </svg>
+                    </span>
+
+                    <span class="field-status-badge badge-red-cross">
+                        <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+
+                    <span id="email-loader" class="field-status-badge htmx-indicator">
+                        <svg class="progress-ring-loader animate-spin" width="20" height="20" viewBox="0 0 24 24">
+                            <circle class="progress-ring-circle-bg" stroke="#fef08a" stroke-width="3" fill="transparent" r="10" cx="12" cy="12"/>
+                            <circle class="progress-ring-circle-active" stroke="#eab308" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.8" stroke-dashoffset="20"/>
+                        </svg>
+                    </span>
+
+                    <input type="email"
+                           id="settings-email-input"
+                           name="new_email"
+                           value="{{ user.email }}"
+                           data-original-value="{{ user.email }}"
+                           placeholder="Enter your email"
+                           required
+                           class="settings-control-field">
+                </div>
+                <button type="submit" id="email-submit-btn" class="btn-action-save">Change Email</button>
+            </form>
+            <div id="email-status-indicator" class="async-status-output-message">
+                {% if user.email and not user.is_gmail_verified %}
+                    <span class="text-verification-warning">Verification pending. Please check your inbox for the confirmation link.</span>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="settings-form-block">
+            <h2 class="section-block-title">Telegram Integration</h2>
+
+            <form id="tg-form"
+                  hx-post="/profiles/settings/change-tg"
+                  hx-target="#telegram-status-indicator"
+                  hx-indicator="#tg-loader"
+                  class="settings-inline-action-form">
+
+                <div id="tg-wrapper"
+                     class="input-field-wrapper {% if user.telegram_id and user.is_tg_verified %}state-verified{% elif user.telegram_id and not user.is_tg_verified %}state-pending{% else %}state-unverified{% endif %}"
+                     data-original-state="{% if user.telegram_id and user.is_tg_verified %}state-verified{% elif user.telegram_id and not user.is_tg_verified %}state-pending{% else %}state-unverified{% endif %}">
+
+                    <span class="field-status-badge badge-green-check">
+                        <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                        </svg>
+                    </span>
+
+                    <span class="field-status-badge badge-red-cross">
+                        <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </span>
+
+                    <span id="tg-loader" class="field-status-badge htmx-indicator">
+                        <svg class="progress-ring-loader animate-spin" width="20" height="20" viewBox="0 0 24 24">
+                            <circle class="progress-ring-circle-bg" stroke="#fef08a" stroke-width="3" fill="transparent" r="10" cx="12" cy="12"/>
+                            <circle class="progress-ring-circle-active" stroke="#eab308" stroke-width="3" fill="transparent" r="10" cx="12" cy="12" stroke-dasharray="62.8" stroke-dashoffset="20"/>
+                        </svg>
+                    </span>
+
+                    <input type="number"
+                           id="settings-tg-input"
+                           name="new_tg_id"
+                           value="{{ user.telegram_id or '' }}"
+                           data-original-value="{{ user.telegram_id or '' }}"
+                           placeholder="Enter Telegram ID"
+                           class="settings-control-field">
+                </div>
+                <button type="submit" id="tg-submit-btn" class="btn-action-save">Link Account</button>
+            </form>
+            <div id="telegram-status-indicator" class="async-status-output-message">
+                {% if user.telegram_id and not user.is_tg_verified %}
+                    <span class="text-verification-warning">Verification pending. Please confirm via your Telegram bot.</span>
+                {% endif %}
+            </div>
+        </section>
+
+    </main>
+
+    <div id="error-message"></div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('focusin', (e) => {
+            const wrapper = e.target.closest('.input-field-wrapper');
+            if (!wrapper) return;
+
+            wrapper.className = 'input-field-wrapper state-none';
+            const indicator = wrapper.closest('.settings-form-block').querySelector('.async-status-output-message');
+            if (indicator) indicator.innerHTML = '';
+        });
+
+        document.addEventListener('input', (e) => {
+            const wrapper = e.target.closest('.input-field-wrapper');
+            if (!wrapper) return;
+
+            if (wrapper.classList.contains('state-verified') || wrapper.classList.contains('state-pending') || wrapper.classList.contains('state-error')) {
+                wrapper.className = 'input-field-wrapper state-none';
+                const indicator = wrapper.closest('.settings-form-block').querySelector('.async-status-output-message');
+                if (indicator) indicator.innerHTML = '';
+            }
+        });
+
+        document.addEventListener('focusout', (e) => {
+            const wrapper = e.target.closest('.input-field-wrapper');
+            if (!wrapper || e.target.tagName !== 'INPUT') return;
+
+            // Если пользователь кликнул на кнопку отправки, не сбрасываем значение поля, даем HTMX отправить новые данные
+            if (e.relatedTarget && e.relatedTarget.type === 'submit') {
+                return;
+            }
+
+            const originalVal = e.target.getAttribute('data-original-value') || '';
+            const originalState = wrapper.getAttribute('data-original-state') || 'state-none';
+            const indicator = wrapper.closest('.settings-form-block').querySelector('.async-status-output-message');
+
+            if (e.target.value !== originalVal) {
+                e.target.value = originalVal;
+            }
+
+            wrapper.className = 'input-field-wrapper ' + originalState;
+
+            if (originalState === 'state-pending' && indicator) {
+                if (e.target.type === 'email') {
+                    indicator.innerHTML = '<span class="text-verification-warning">Verification pending. Please check your inbox for the confirmation link.</span>';
+                } else {
+                    indicator.innerHTML = '<span class="text-verification-warning">Verification pending. Please confirm via your Telegram bot.</span>';
+                }
+            }
+        });
+
+        document.addEventListener('htmx:afterRequest', (event) => {
+            const form = event.target.closest('form');
+            if (!form || !form.classList.contains('settings-inline-action-form')) return;
+
+            const wrapper = form.querySelector('.input-field-wrapper');
+            const indicator = form.closest('.settings-form-block').querySelector('.async-status-output-message');
+            const errorToastContainer = document.getElementById('error-message');
+
+            if (!event.detail.successful) {
+                if (wrapper) wrapper.className = 'input-field-wrapper state-error';
+
+                try {
+                    const responseData = JSON.parse(event.detail.xhr.responseText);
+                    let errMsg = 'An error occurred during validation.';
+
+                    if (responseData.detail) {
+                        if (Array.isArray(responseData.detail)) {
+                            errMsg = responseData.detail[0].msg || responseData.detail[0];
+                        } else if (typeof responseData.detail === 'object') {
+                            errMsg = responseData.detail.msg || JSON.stringify(responseData.detail);
+                        } else {
+                            errMsg = responseData.detail;
+                        }
+                    }
+
+                    if (errorToastContainer) {
+                        errorToastContainer.innerHTML = `
+                            <div class="auth-error-container">
+                                <ul class="auth-error-list">
+                                    <li class="auth-error-item">${errMsg}</li>
+                                </ul>
+                            </div>
+                        `;
+
+                        const toast = errorToastContainer.querySelector('.auth-error-container');
+                        const removeToast = () => {
+                            if (toast && !toast.classList.contains('fade-out')) {
+                                toast.classList.add('fade-out');
+                                setTimeout(() => { errorToastContainer.innerHTML = ''; }, 300);
+                            }
+                        };
+
+                        const autoHideTimeout = setTimeout(removeToast, 10000);
+                        toast.addEventListener('click', () => {
+                            clearTimeout(autoHideTimeout);
+                            removeToast();
+                        });
+                    }
+                } catch (e) {
+                    if (indicator) indicator.innerHTML = '<span style="color: #ef4444; font-weight: 500;">Server error occurred.</span>';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

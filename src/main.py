@@ -7,8 +7,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 
-from src.routers.auth import login, register, email
-from src.routers.account import profile
+from src.routers.auth import login, register, email, logout
+from src.routers.account import profile, tracks, settings_router
 from src.utils.templates import source
 
 
@@ -172,6 +172,20 @@ async def get_root(request: Request):
 
 
 app.include_router(login)
+app.include_router(logout)
 app.include_router(register)
 app.include_router(email)
 app.include_router(profile)
+app.include_router(tracks)
+app.include_router(settings_router)
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=8000,
+        reload=False
+    )

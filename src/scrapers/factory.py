@@ -5,6 +5,7 @@ from src.scrapers.parser.base import BaseParser
 from src.scrapers.pipeline import ScrapingPipeline
 from src.scrapers.config import SiteConfig
 from src.scrapers.sites.avito.config import AVITO_CONFIG
+from src.scrapers.sites.youla.config import YOULA_CONFIG
 from src.scrapers.exceptions import UnsupportedUrlError
 
 
@@ -15,6 +16,7 @@ class ScraperFactory:
 
     CONFIGS: tuple[SiteConfig, ...] = (
         AVITO_CONFIG,
+        YOULA_CONFIG,
     )
 
     @classmethod

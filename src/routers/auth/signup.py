@@ -59,7 +59,7 @@ async def create_user(
         max_age=3600
     )
 
-    db_user = await UserDAL(db_session=db_session).get_user_by(id=user.id)
+    db_user = await UserDAL(db_session=db_session).get_by(id=user.id)
     if db_user:
         await process_verification_email(
             user=db_user,
